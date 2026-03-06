@@ -1,5 +1,6 @@
 import PDFDocument from "pdfkit";
 import type { Pago, Venta, Lote, User } from "@shared/schema";
+import { generateAllTechnicalDocs, determinarModelo } from "./technical-docs";
 
 function formatCurrency(value: string | number): string {
   const num = typeof value === "string" ? parseFloat(value) : value;
@@ -606,15 +607,19 @@ export async function sendCompletionCongratulations(venta: Venta, lote: Lote, us
   if (!apiKey) { console.log("Email no configurado: BREVO_API_KEY no definido"); return; }
 
   try {
-    const pdfBuffer = await generateCompletionPDF(venta, lote, user, totalPagado);
+    const modelo = determinarModelo(lote.area);
+
+    const [pdfBuffer, technicalDocs] = await Promise.all([
+      generateCompletionPDF(venta, lote, user, totalPagado),
+      generateAllTechnicalDocs(lote, user),
+    ]);
 
     const documentosList = [
-      "Planos arquitectonicos completos",
-      "Planos estructurales",
-      "Diseno de redes hidraulicas y sanitarias",
-      "Diseno electrico",
-      "Aprobacion para licencia de construccion",
-      "Asesoria tecnica personalizada",
+      `Planos arquitectonicos completos - Modelo "${modelo.nombre}"`,
+      `Planos estructurales - Modelo "${modelo.nombre}"`,
+      `Diseno de redes hidraulicas y sanitarias - Modelo "${modelo.nombre}"`,
+      `Diseno electrico - Modelo "${modelo.nombre}"`,
+      `Aprobacion para licencia de construccion - Modelo "${modelo.nombre}"`,
     ];
 
     const body = `
@@ -642,11 +647,17 @@ export async function sendCompletionCongratulations(venta: Venta, lote: Lote, us
         </div>
       </div>
 
-      <h3 style="color: ${colors.green}; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Documentos incluidos</h3>
+      <div style="background: linear-gradient(135deg, #F0F7F4, #FFFFFF); border: 2px solid ${colors.greenMid}; border-radius: 12px; padding: 24px; margin: 25px 0;">
+        <h3 style="color: ${colors.green}; margin: 0 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">&#127968; Modelo arquitectonico asignado</h3>
+        <p style="font-size: 22px; font-weight: 700; color: ${colors.green}; margin: 0 0 6px;">"${modelo.nombre}"</p>
+        <p style="font-size: 13px; color: #666; margin: 0;">Area construida: <strong>${modelo.area} m2</strong> &bull; ${modelo.pisos} piso(s) &bull; ${modelo.habitaciones}</p>
+      </div>
+
+      <h3 style="color: ${colors.green}; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">&#128206; Documentos tecnicos adjuntos (${documentosList.length} PDFs)</h3>
       <div style="background-color: #FFFFFF; border: 1px solid ${colors.border}; border-radius: 10px; overflow: hidden;">
         ${documentosList.map((item, i) => `
           <div style="padding: 12px 16px; border-bottom: 1px solid ${colors.border}; background-color: ${i % 2 === 0 ? colors.cream : "#FFFFFF"}; display: flex; align-items: center;">
-            <span style="color: ${colors.greenLight}; font-size: 14px; margin-right: 10px;">&#10003;</span>
+            <span style="color: ${colors.greenLight}; font-size: 14px; margin-right: 10px;">&#128196;</span>
             <span style="font-size: 13px; color: #444;">${item}</span>
           </div>
         `).join("")}
@@ -655,7 +666,8 @@ export async function sendCompletionCongratulations(venta: Venta, lote: Lote, us
       <div style="background-color: #FFF9E6; border-left: 4px solid ${colors.goldLight}; border-radius: 0 8px 8px 0; padding: 16px; margin: 25px 0;">
         <p style="margin: 0 0 4px; font-size: 12px; font-weight: 700; color: ${colors.gold}; text-transform: uppercase; letter-spacing: 1px;">Proximos pasos</p>
         <p style="margin: 0; font-size: 13px; color: #666; line-height: 1.6;">
-          Nuestro equipo se comunicara contigo para coordinar la entrega de los documentos tecnicos y la asesoria personalizada para la construccion de tu vivienda.
+          Revisa los documentos tecnicos adjuntos correspondientes al modelo <strong>"${modelo.nombre}"</strong>. 
+          Nuestro equipo se comunicara contigo para coordinar la asesoria personalizada para la construccion de tu vivienda.
         </p>
       </div>
 
@@ -666,19 +678,24 @@ export async function sendCompletionCongratulations(venta: Venta, lote: Lote, us
 
     const htmlContent = emailWrapper(colors.green, colors.goldLight, "Pago Total Completado", `Lote ${lote.codigo} - ${lote.ubicacion}`, body);
 
+    const attachments = [
+      { content: pdfBuffer.toString("base64"), name: `certificado_pago_total_lote_${lote.codigo}.pdf` },
+      ...technicalDocs,
+    ];
+
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: { "accept": "application/json", "content-type": "application/json", "api-key": apiKey },
       body: JSON.stringify({
         sender: { name: "TerraNova Group", email: senderEmail },
         to: [{ email: user.email, name: `${user.nombre} ${user.apellido}` }],
-        subject: `Felicitaciones! Pago Total Completado - Lote ${lote.codigo} - TerraNova Group`,
+        subject: `Felicitaciones! Pago Total Completado - Lote ${lote.codigo} - Modelo ${modelo.nombre} - TerraNova Group`,
         htmlContent,
-        attachment: [{ content: pdfBuffer.toString("base64"), name: `certificado_pago_total_lote_${lote.codigo}.pdf` }],
+        attachment: attachments,
       }),
     });
     const result = await response.json();
-    if (response.ok) { console.log(`Correo de felicitaciones enviado a ${user.email} por pago total del lote ${lote.codigo}`); }
+    if (response.ok) { console.log(`Correo de felicitaciones con ${attachments.length} documentos enviado a ${user.email} (Modelo: ${modelo.nombre})`); }
     else { console.error("Error de Brevo:", result); }
   } catch (error) { console.error("Error al enviar correo de felicitaciones:", error); }
 }
