@@ -210,7 +210,29 @@ export default function ClientDashboard() {
                   return (
                     <Card key={venta.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow" data-testid={`card-venta-${venta.id}`}>
                       <div className="flex flex-col md:flex-row">
-                        <div className="bg-gradient-to-br from-primary/5 to-primary/10 p-8 md:w-1/3 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-gray-100 relative">
+                        <div className="md:w-1/3 relative">
+                          <img
+                            src={getLoteImage(venta.loteId)}
+                            alt={`Lote ${lote?.codigo}`}
+                            className="w-full h-full object-cover min-h-[220px]"
+                          />
+                        
+                          <div className="absolute top-4 right-4">
+                            <Badge className="bg-green-100 text-green-700 border-green-200 font-medium">
+                              <CheckCircle2 className="w-3 h-3 mr-1" /> Adquirido
+                            </Badge>
+                          </div>
+                        
+                          <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow">
+                            <h2 className="text-lg font-bold text-primary">
+                              Lote {lote?.codigo || "N/A"}
+                            </h2>
+                            <p className="text-xs text-muted-foreground">
+                              {lote?.ubicacion} • {lote?.area} m²
+                            </p>
+                          </div>
+                        
+                        </div>
                           <div className="absolute top-4 right-4">
                             <Badge className="bg-green-100 text-green-700 border-green-200 hover:bg-green-100 font-medium">
                               <CheckCircle2 className="w-3 h-3 mr-1" /> Adquirido
