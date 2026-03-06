@@ -167,7 +167,7 @@ export default function ProjectInfo() {
               <div className="h-56 overflow-hidden relative bg-secondary">
                 <div
                   className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                  style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80)' }}
+                  style={{ backgroundImage: 'url(https://images.pexels.com/photos/10610733/pexels-photo-10610733.jpeg)' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-4 left-4 text-white">
