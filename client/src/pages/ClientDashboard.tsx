@@ -216,13 +216,11 @@ export default function ClientDashboard() {
                             alt={`Lote ${lote?.codigo}`}
                             className="w-full h-full object-cover min-h-[220px]"
                           />
-                        
                           <div className="absolute top-4 right-4">
                             <Badge className="bg-green-100 text-green-700 border-green-200 font-medium">
                               <CheckCircle2 className="w-3 h-3 mr-1" /> Adquirido
                             </Badge>
                           </div>
-                        
                           <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow">
                             <h2 className="text-lg font-bold text-primary">
                               Lote {lote?.codigo || "N/A"}
@@ -231,7 +229,6 @@ export default function ClientDashboard() {
                               {lote?.ubicacion} • {lote?.area} m²
                             </p>
                           </div>
-                        
                         </div>
                           <div className="absolute top-4 right-4">
                             <Badge className="bg-green-100 text-green-700 border-green-200 hover:bg-green-100 font-medium">
