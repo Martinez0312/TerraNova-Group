@@ -80,6 +80,7 @@ export default function ClientDashboard() {
   };
 
   const getLoteForVenta = (loteId: number) => lotes.find(l => l.id === loteId);
+
   const getLoteImage = (loteId: number) => {
   const index = loteId - 1;
   return lotImages[index] || lotImages[0];
