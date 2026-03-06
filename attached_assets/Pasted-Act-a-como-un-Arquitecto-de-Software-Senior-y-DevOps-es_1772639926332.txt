@@ -1,0 +1,330 @@
+Actúa como un Arquitecto de Software Senior y DevOps especializado en Node.js, Express, MySQL y despliegue en Railway.
+
+Debes generar un Sistema Web Inmobiliario completamente funcional, profesional y listo para producción, basado en el proyecto académico “Sistema Web para Gestión de Venta de Lotes de Terreno (ADSO-19)”.
+
+El sistema debe generarse completo, sin archivos faltantes, sin secciones incompletas y debe funcionar al 100% inmediatamente después de desplegarse en Railway.
+
+1. REQUISITOS TÉCNICOS OBLIGATORIOS
+Backend
+
+Node.js 20+ o superior
+
+Express
+
+Arquitectura MVC clara
+
+Separación de rutas, controladores y modelos
+
+Manejo centralizado de errores
+
+dotenv correctamente implementado
+
+Conexión a MySQL usando pool de conexiones
+
+Configuración compatible con MySQL remoto en Railway
+
+Puerto dinámico usando:
+const PORT = process.env.PORT || 3000
+
+NO usar bcrypt por ahora.
+
+Base de Datos (MySQL)
+
+Debe incluir:
+
+Script SQL completo:
+
+Creación de base de datos
+
+Tablas
+
+Relaciones
+
+Claves primarias y foráneas
+
+Índices
+
+Modelo Entidad–Relación explicado
+
+Compatible con MySQL Railway (no localhost fijo)
+
+Conexión usando variables de entorno:
+
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+
+Debe permitir funcionar tanto en local como en producción.
+
+Frontend
+
+HTML5
+
+CSS3 moderno (diseño elegante tipo portal inmobiliario profesional)
+
+JavaScript Vanilla
+
+Totalmente responsivo
+
+Interfaz comercial atractiva
+
+Animaciones suaves
+
+Catálogo visual de lotes en formato cards
+
+Landing page profesional
+
+Inspiración: sitios comerciales de venta de proyectos inmobiliarios.
+
+2. FUNCIONALIDADES COMPLETAS (NO PARCIALES)
+Gestión de Usuarios
+
+Registro con validación
+
+Login funcional
+
+Logout funcional
+
+Recuperación de contraseña por correo
+
+Roles:
+
+Administrador
+
+Cliente
+
+Middleware de protección de rutas
+
+Gestión de Lotes
+
+Administrador puede:
+
+Crear
+
+Editar
+
+Eliminar
+
+Cambiar estado
+
+Estados:
+
+Disponible
+
+Reservado
+
+Vendido
+
+Cliente puede:
+
+Ver catálogo
+
+Filtrar por etapa
+
+Ver detalles
+
+Compra y Pagos
+
+Cliente puede comprar uno o varios lotes
+
+Registro de pagos por cuotas
+
+Cálculo automático de saldo pendiente
+
+Historial completo
+
+Generación automática de comprobante en PDF
+
+Envío automático por correo con nodemailer
+
+Debe funcionar en Railway (usar variables de entorno SMTP).
+
+Información del Proyecto
+
+Landing page con:
+
+Descripción general
+
+Etapas:
+
+Lanzamiento
+
+Preventa
+
+Construcción
+
+Entrega
+
+PQRS
+
+Registro de solicitudes
+
+Seguimiento por cliente
+
+Panel admin para cambiar estado
+
+Estados:
+
+Pendiente
+
+En proceso
+
+Resuelto
+
+3. DASHBOARDS FUNCIONALES
+Dashboard Cliente
+
+Mis lotes
+
+Estado de cuenta
+
+Historial de pagos
+
+PQRS
+
+Perfil
+
+Cerrar sesión
+
+Dashboard Administrador
+
+Gestión de usuarios
+
+Gestión de lotes
+
+Gestión de ventas
+
+Gestión de pagos
+
+Gestión de PQRS
+
+Reportes básicos
+
+Cerrar sesión
+
+Todos los botones deben redirigir correctamente.
+Ningún botón debe quedar sin funcionalidad.
+
+4. PREVENCIÓN DE ERRORES EN RAILWAY
+
+El proyecto debe incluir:
+
+package.json correctamente configurado:
+
+"start": "node server.js"
+
+engines configurado a Node 20 o superior
+
+No usar rutas absolutas dependientes de localhost
+
+Configuración compatible con Railway MySQL plugin
+
+Manejo correcto de:
+
+process.env.PORT
+
+Variables faltantes
+
+Errores de conexión a DB
+
+Archivo:
+
+.env.example
+
+README.md con pasos exactos para:
+
+Clonar
+
+Instalar dependencias
+
+Configurar variables en Railway
+
+Crear base de datos
+
+Desplegar correctamente
+
+Debe prevenir errores comunes como:
+
+Cannot GET /
+
+Error de puerto fijo
+
+Error de conexión ECONNREFUSED
+
+Error de CORS
+
+Error por falta de variables de entorno
+
+5. ESTRUCTURA COMPLETA DEL PROYECTO
+
+Debe incluir absolutamente todo:
+
+server.js
+
+app.js
+
+config/db.js
+
+models/
+
+controllers/
+
+routes/
+
+middleware/
+
+public/
+
+views/
+
+utils/
+
+services/
+
+Script SQL
+
+README
+
+Manual básico de usuario
+
+No omitir ningún archivo necesario.
+
+6. ENTREGABLES
+
+La IA debe generar:
+
+Estructura completa de carpetas
+
+Código fuente completo
+
+Script SQL
+
+Modelo ER explicado
+
+Manual básico de usuario
+
+README profesional
+
+Instrucciones detalladas para Railway
+
+Garantía de que funciona tras despliegue
+
+7. REGLAS IMPORTANTES
+
+No entregar código incompleto
+
+No dejar funciones vacías
+
+No usar placeholders
+
+No dejar botones sin acción
+
+No omitir redirecciones
+
+No omitir validaciones básicas
+
+No generar errores al iniciar el servidor
+
+El sistema debe estar listo para producción y ejecutarse inmediatamente después del despliegue en Railway.

@@ -1,0 +1,61 @@
+npm run build
+4s
+npm warn config production Use `--omit=dev` instead.
+> rest-express@1.0.0 build
+> tsx script/build.ts
+building client...
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 1853 modules transformed.
+rendering chunks...
+[meta-images] no Replit deployment domain found, skipping meta tag updates
+computing gzip size...
+../dist/public/index.html                           1.52 kB │ gzip:   0.60 kB
+../dist/public/assets/lot_image_8-BioCki6m.jpg    145.37 kB
+../dist/public/assets/lot_image_7-20TbT1YW.jpg    151.16 kB
+../dist/public/assets/lot_image_3-BY13dy2o.jpg    232.48 kB
+../dist/public/assets/house-model-1-DjOFzYpn.jpg  241.04 kB
+../dist/public/assets/lot_image_2-BNxjumwY.jpg    288.83 kB
+../dist/public/assets/lot_image_6-C1PI9AEM.jpg    311.90 kB
+../dist/public/assets/lot_image_5-BVzIr0qP.jpg    342.57 kB
+../dist/public/assets/lot_image_4-C74HxaHH.jpg    504.43 kB
+../dist/public/assets/hero-bg-DBHN7hza.jpg        565.03 kB
+../dist/public/assets/index-DDVpRJlw.css          107.54 kB │ gzip:  17.41 kB
+../dist/public/assets/index-DvxHKQZx.js           464.63 kB │ gzip: 141.58 kB
+✓ built in 2.73s
+building server...
+✘ [ERROR] Could not resolve "bcryptjs"
+    server/auth.ts:3:19:
+      3 │ import bcrypt from "bcryptjs";
+        ╵                    ~~~~~~~~~~
+  You can mark the path "bcryptjs" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+✘ [ERROR] Could not resolve "bcryptjs"
+    server/routes.ts:57:32:
+      57 │     const bcrypt = await import("bcryptjs");
+         ╵                                 ~~~~~~~~~~
+  You can mark the path "bcryptjs" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle. You can also add ".catch()" here to handle this failure at run-time instead of bundle-time.
+✘ [ERROR] Could not resolve "bcryptjs"
+    server/storage.ts:2:19:
+      2 │ import bcrypt from "bcryptjs";
+        ╵                    ~~~~~~~~~~
+  You can mark the path "bcryptjs" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+3 errors
+Error: Build failed with 3 errors:
+
+server/auth.ts:3:19: ERROR: Could not resolve "bcryptjs"
+server/routes.ts:57:32: ERROR: Could not resolve "bcryptjs"
+server/storage.ts:2:19: ERROR: Could not resolve "bcryptjs"
+    at failureErrorWithLog (/app/node_modules/esbuild/lib/main.js:1467:15)
+    at /app/node_modules/esbuild/lib/main.js:926:25
+    at /app/node_modules/esbuild/lib/main.js:878:52
+    at buildResponseToResult (/app/node_modules/esbuild/lib/main.js:924:7)
+    at /app/node_modules/esbuild/lib/main.js:951:16
+    at responseCallbacks.<computed> (/app/node_modules/esbuild/lib/main.js:603:9)
+    at handleIncomingPacket (/app/node_modules/esbuild/lib/main.js:658:12)
+    at Socket.readFromStdout (/app/node_modules/esbuild/lib/main.js:581:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+ERROR: failed to build: failed to solve: process "sh -c npm run build" did not complete successfully: exit code: 1
