@@ -4,8 +4,8 @@
 -- Proyecto Académico ADSO-19
 -- =====================================================
 
-CREATE DATABASE IF NOT EXISTS terranova;
-USE terranova;
+CREATE DATABASE IF NOT EXISTS railway;
+USE railway;
 
 -- =====================================================
 -- TABLA: users (Usuarios del sistema)
