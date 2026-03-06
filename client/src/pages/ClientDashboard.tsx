@@ -18,6 +18,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import type { Venta, Pago, Pqrs, Lote, Cuota } from "@shared/schema";
 
+import lotImg1 from "@/assets/images/lotes/lot_image_1.jpg";
+import lotImg2 from "@/assets/images/lotes/lot_image_2.jpg";
+import lotImg3 from "@/assets/images/lotes/lot_image_3.jpg";
+import lotImg4 from "@/assets/images/lotes/lot_image_4.jpg";
+import lotImg5 from "@/assets/images/lotes/lot_image_5.jpg";
+import lotImg6 from "@/assets/images/lotes/lot_image_6.jpg";
+import lotImg7 from "@/assets/images/lotes/lot_image_7.jpg";
+import lotImg8 from "@/assets/images/lotes/lot_image_8.jpg";
+
+const lotImages = [lotImg1, lotImg2, lotImg3, lotImg4, lotImg5, lotImg6, lotImg7, lotImg8];
+
 export default function ClientDashboard() {
   const { user, logout } = useAuth();
   const [, setLocation] = useLocation();
@@ -69,6 +80,10 @@ export default function ClientDashboard() {
   };
 
   const getLoteForVenta = (loteId: number) => lotes.find(l => l.id === loteId);
+  const getLoteImage = (loteId: number) => {
+  const index = loteId - 1;
+  return lotImages[index] || lotImages[0];
+};
 
   const getTotalPagado = (ventaId: number) => {
     return pagos.filter(p => p.ventaId === ventaId && p.estado === "Aprobado").reduce((sum, p) => sum + Number(p.monto), 0);
