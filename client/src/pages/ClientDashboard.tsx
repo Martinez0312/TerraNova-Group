@@ -4,21 +4,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, DollarSign, Calendar, FileText, CheckCircle2, CreditCard, LogOut, User, Loader2, Clock, XCircle, AlertCircle, ShoppingBag, MessageSquare, TrendingUp } from "lucide-react";
+import { MapPin, DollarSign, LogOut, User, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import type { Venta, Pago, Pqrs, Lote, Cuota } from "@shared/schema";
+import type { Venta, Pago, Lote } from "@shared/schema";
 
-/* IMÁGENES LOTES */
+/* IMÁGENES DE LOTES */
 import lotImg1 from "@/assets/images/lotes/lot_image_1.jpg";
 import lotImg2 from "@/assets/images/lotes/lot_image_2.jpg";
 import lotImg3 from "@/assets/images/lotes/lot_image_3.jpg";
@@ -34,10 +26,6 @@ export default function ClientDashboard() {
 
 const { user, logout } = useAuth();
 const [, setLocation] = useLocation();
-const { toast } = useToast();
-
-const [pagoDialog, setPagoDialog] = useState<{ ventaId: number; valorCuota: string } | null>(null);
-const [pqrsDialog, setPqrsDialog] = useState(false);
 
 if (!user) {
 setLocation("/login");
@@ -46,7 +34,6 @@ return null;
 
 const { data: ventas = [] } = useQuery<Venta[]>({ queryKey: ["/api/ventas"] });
 const { data: pagos = [] } = useQuery<Pago[]>({ queryKey: ["/api/pagos"] });
-const { data: pqrsList = [] } = useQuery<Pqrs[]>({ queryKey: ["/api/pqrs"] });
 const { data: lotes = [] } = useQuery<Lote[]>({ queryKey: ["/api/lotes"] });
 
 /* FUNCIONES */
@@ -55,11 +42,12 @@ const formatPrice = (price: string | number) => {
 return new Intl.NumberFormat("es-CO", {
 style: "currency",
 currency: "COP",
-maximumFractionDigits: 0,
+maximumFractionDigits: 0
 }).format(Number(price));
 };
 
-const getLoteForVenta = (loteId: number) => lotes.find(l => l.id === loteId);
+const getLoteForVenta = (loteId: number) =>
+lotes.find(l => l.id === loteId);
 
 const getLoteImage = (loteId: number) => {
 const index = loteId - 1;
@@ -72,18 +60,11 @@ return pagos
 .reduce((sum, p) => sum + Number(p.monto), 0);
 };
 
-const getCuotasPagadas = (ventaId: number) => {
-return pagos.filter(p => p.ventaId === ventaId && p.estado === "Aprobado").length;
-};
-
-const totalInvertido = ventas.reduce((sum, v) => sum + Number(v.valorTotal), 0);
-const totalPagadoGeneral = ventas.reduce((sum, v) => sum + getTotalPagado(v.id), 0);
-
 return (
 
 <Layout>
 
-<div className="bg-gray-50 min-h-[calc(100vh-200px)]">
+<div className="bg-gray-50 min-h-screen">
 
 {/* HEADER */}
 
@@ -100,52 +81,21 @@ return (
 <div>
 
 <h1 className="text-2xl font-bold">
-
 {user.nombre} {user.apellido}
-
 </h1>
 
-<p className="text-sm opacity-80">{user.email}</p>
+<p className="text-sm opacity-80">
+{user.email}
+</p>
 
 </div>
 
 </div>
 
 <Button variant="outline" onClick={logout}>
-
 <LogOut className="w-4 h-4 mr-2" />
-
-Cerrar Sesión
-
+Cerrar sesión
 </Button>
-
-</div>
-
-<div className="grid md:grid-cols-3 gap-4 mt-6">
-
-<div className="bg-white/10 p-4 rounded">
-
-<p className="text-xs uppercase">Lotes Adquiridos</p>
-
-<p className="text-2xl font-bold">{ventas.length}</p>
-
-</div>
-
-<div className="bg-white/10 p-4 rounded">
-
-<p className="text-xs uppercase">Total Invertido</p>
-
-<p className="text-2xl font-bold">{formatPrice(totalInvertido)}</p>
-
-</div>
-
-<div className="bg-white/10 p-4 rounded">
-
-<p className="text-xs uppercase">Total Pagado</p>
-
-<p className="text-2xl font-bold">{formatPrice(totalPagadoGeneral)}</p>
-
-</div>
 
 </div>
 
@@ -159,35 +109,12 @@ Cerrar Sesión
 
 <Tabs defaultValue="lotes">
 
-<TabsList className="grid grid-cols-3 mb-8">
-
+<TabsList className="grid grid-cols-1 mb-8">
 <TabsTrigger value="lotes">
-
 <MapPin className="w-4 h-4 mr-2" />
-
-Mis Lotes
-
+Mis lotes
 </TabsTrigger>
-
-<TabsTrigger value="pagos">
-
-<DollarSign className="w-4 h-4 mr-2" />
-
-Pagos
-
-</TabsTrigger>
-
-<TabsTrigger value="pqrs">
-
-<MessageSquare className="w-4 h-4 mr-2" />
-
-PQRS
-
-</TabsTrigger>
-
 </TabsList>
-
-{/* MIS LOTES */}
 
 <TabsContent value="lotes">
 
@@ -196,11 +123,8 @@ PQRS
 <Card>
 
 <CardContent className="text-center py-10">
-
-<MapPin className="mx-auto mb-4 text-gray-300" size={40} />
-
+<MapPin className="mx-auto mb-4 text-gray-300" size={40}/>
 <p>No tienes lotes adquiridos.</p>
-
 </CardContent>
 
 </Card>
@@ -212,12 +136,8 @@ PQRS
 {ventas.map((venta) => {
 
 const lote = getLoteForVenta(venta.loteId);
-
 const totalPagado = getTotalPagado(venta.id);
-
 const progreso = Math.round((totalPagado / Number(venta.valorTotal)) * 100);
-
-const saldo = Number(venta.valorTotal) - totalPagado;
 
 return (
 
@@ -225,65 +145,70 @@ return (
 
 <div className="flex flex-col md:flex-row">
 
-{/* IMAGEN DEL LOTE */}
+{/* PANEL IZQUIERDO CON IMAGEN DE FONDO */}
 
-<div className="md:w-1/3">
+<div
+className="p-8 md:w-1/3 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-gray-100 relative bg-cover bg-center"
+style={{
+backgroundImage: `url(${getLoteImage(venta.loteId)})`
+}}
+>
 
-<img
+<div className="absolute inset-0 bg-black/40"></div>
 
-src={getLoteImage(venta.loteId)}
+<div className="relative z-10 flex flex-col items-center text-white">
 
-alt="lote"
+<div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow">
+<MapPin className="w-9 h-9 text-primary" />
+</div>
 
-className="w-full h-full object-cover min-h-[220px]"
+<h2 className="text-2xl font-bold mt-4">
+Lote {lote?.codigo || "N/A"}
+</h2>
 
-/>
+<p className="text-sm opacity-90">
+{lote?.ubicacion || ""} • {lote?.area || "0"} m²
+</p>
 
 </div>
 
-{/* INFORMACIÓN */}
+</div>
+
+{/* PANEL DERECHO */}
 
 <div className="p-6 md:w-2/3">
 
-<h2 className="text-xl font-bold mb-1">
-
-Lote {lote?.codigo}
-
-</h2>
-
-<p className="text-sm text-gray-500 mb-4">
-
-{lote?.ubicacion} • {lote?.area} m²
-
-</p>
-
-<div className="grid grid-cols-2 gap-4 mb-4">
+<div className="flex justify-between mb-4">
 
 <div>
 
-<p className="text-xs text-gray-500">Valor Total</p>
+<p className="text-xs text-gray-500">
+Valor total
+</p>
 
-<p className="font-bold">
-
+<p className="text-xl font-bold">
 {formatPrice(venta.valorTotal)}
-
 </p>
 
 </div>
 
 <div>
 
-<p className="text-xs text-gray-500">Saldo</p>
+<p className="text-xs text-gray-500">
+Saldo pendiente
+</p>
 
-<p className="font-bold">
-
-{saldo > 0 ? formatPrice(saldo) : "Pagado"}
-
+<p className="text-xl font-bold text-green-600">
+Pagado
 </p>
 
 </div>
 
 </div>
+
+<p className="text-sm text-gray-500 mb-2">
+Progreso de pago
+</p>
 
 <Progress value={progreso} />
 
