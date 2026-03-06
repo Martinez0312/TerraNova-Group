@@ -294,6 +294,10 @@ export default function ClientDashboard() {
                                 <span className="text-sm text-muted-foreground">Cuotas</span>
                                 <span className="font-semibold text-sm">{cuotasPagadas} / {venta.cuotas}</span>
                               </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-muted-foreground">Valor Cuota</span>
+                                <span className="font-semibold text-sm text-accent">{formatPrice(venta.valorCuota)}</span>
+                              </div>
                             </div>
                             {saldoPendiente > 0 && (
                               <div className="space-y-2">
