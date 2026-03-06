@@ -46,77 +46,82 @@ function drawDecorativeBorder(doc: PDFKit.PDFDocument, x: number, y: number, w: 
 }
 
 function drawTableRow(doc: PDFKit.PDFDocument, y: number, label: string, value: string, w: number, isAlt: boolean, accentColor: string, isHeader = false) {
-  const rowH = isHeader ? 28 : 24;
-  const x = 55;
-  const colW = (w - 10) / 2;
+  const x = 40;
+  const labelW = Math.round(w * 0.35);
+  const valueW = w - labelW;
+  const pad = 10;
 
   if (isHeader) {
+    const rowH = 24;
     doc.rect(x, y, w, rowH).fill(accentColor);
-    doc.fontSize(9).fill(colors.white).text(label.toUpperCase(), x + 12, y + 9, { width: colW - 15, characterSpacing: 1 });
-    doc.fontSize(9).fill(colors.white).text(value.toUpperCase(), x + colW, y + 9, { width: colW - 15, characterSpacing: 1 });
+    doc.fontSize(8).fill(colors.white).text(label.toUpperCase(), x + pad, y + 7, { width: labelW - pad * 2, characterSpacing: 1 });
+    doc.fontSize(8).fill(colors.white).text(value.toUpperCase(), x + labelW + pad, y + 7, { width: valueW - pad * 2, characterSpacing: 1 });
+    return y + rowH;
   } else {
+    const textH = doc.fontSize(8.5).heightOfString(value, { width: valueW - pad * 2 });
+    const rowH = Math.max(22, textH + 10);
     doc.rect(x, y, w, rowH).fill(isAlt ? colors.grayUltraLight : colors.white);
     doc.rect(x, y, w, rowH).lineWidth(0.3).stroke(colors.border);
-    doc.fontSize(8.5).fill(colors.grayMed).text(label, x + 12, y + 7);
-    doc.fontSize(9).fill(colors.dark).text(value, x + colW, y + 7, { width: colW - 15 });
+    doc.rect(x, y, labelW, rowH).lineWidth(0.3).stroke(colors.border);
+    const textY = y + (rowH - 10) / 2 + 1;
+    doc.fontSize(8).fill(colors.grayMed).text(label, x + pad, textY, { width: labelW - pad * 2 });
+    doc.fontSize(8.5).fill(colors.dark).text(value, x + labelW + pad, y + 5, { width: valueW - pad * 2, lineGap: 2 });
+    return y + rowH;
   }
-  return y + rowH;
 }
 
 function pdfLuxuryHeader(doc: PDFKit.PDFDocument, bgColor: string, accentColor: string, title: string, subtitle: string) {
   const w = doc.page.width;
+  const m = 40;
+  const cw = w - m * 2;
 
-  doc.rect(0, 0, w, 145).fill(bgColor);
+  doc.rect(0, 0, w, 135).fill(bgColor);
 
-  doc.rect(30, 15, w - 60, 115).lineWidth(0.5).stroke(accentColor);
-  doc.rect(33, 18, w - 66, 109).lineWidth(0.3).stroke(accentColor);
+  doc.rect(m - 10, 12, cw + 20, 111).lineWidth(0.5).stroke(accentColor);
+  doc.rect(m - 7, 15, cw + 14, 105).lineWidth(0.3).stroke(accentColor);
 
-  doc.fontSize(8).fill(accentColor).text("SISTEMA INMOBILIARIO", 0, 30, { align: "center", characterSpacing: 5 });
+  doc.fontSize(7).fill(accentColor).text("SISTEMA INMOBILIARIO", m, 26, { width: cw, align: "center", characterSpacing: 4 });
+  doc.fontSize(22).fill(colors.white).text("TERRANOVA GROUP", m, 40, { width: cw, align: "center", characterSpacing: 6 });
 
-  doc.fontSize(28).fill(colors.white).text("TERRANOVA GROUP", 0, 44, { align: "center", characterSpacing: 8 });
-
-  const lineY = 78;
-  const lineW = 180;
+  const lineY = 68;
   const cx = w / 2;
-  doc.moveTo(cx - lineW / 2, lineY).lineTo(cx - 15, lineY).lineWidth(0.5).stroke(accentColor);
-  doc.moveTo(cx + 15, lineY).lineTo(cx + lineW / 2, lineY).lineWidth(0.5).stroke(accentColor);
-  doc.fontSize(6).fill(accentColor).text("VR", cx - 5, lineY - 4);
+  doc.moveTo(cx - 80, lineY).lineTo(cx - 10, lineY).lineWidth(0.5).stroke(accentColor);
+  doc.moveTo(cx + 10, lineY).lineTo(cx + 80, lineY).lineWidth(0.5).stroke(accentColor);
+  doc.fontSize(5).fill(accentColor).text("TN", m, lineY - 3, { width: cw, align: "center" });
 
-  doc.fontSize(13).fill(colors.white).text(title.toUpperCase(), 0, 90, { align: "center", characterSpacing: 2 });
-  doc.fontSize(8).fill(accentColor).text(subtitle, 0, 110, { align: "center" });
+  doc.fontSize(12).fill(colors.white).text(title.toUpperCase(), m, 78, { width: cw, align: "center", characterSpacing: 2 });
+  doc.fontSize(8).fill(accentColor).text(subtitle, m, 98, { width: cw, align: "center" });
 
-  doc.rect(0, 145, w, 3).fill(accentColor);
+  doc.rect(0, 135, w, 2.5).fill(accentColor);
 }
 
 function pdfLuxuryFooter(doc: PDFKit.PDFDocument) {
   const w = doc.page.width;
-  const y = doc.page.height - 70;
+  const m = 40;
+  const cw = w - m * 2;
+  const y = doc.page.height - 55;
 
-  doc.rect(0, y, w, 70).fill(colors.green);
-  doc.rect(0, y, w, 2).fill(colors.goldLight);
+  doc.rect(0, y, w, 55).fill(colors.green);
+  doc.rect(0, y, w, 1.5).fill(colors.goldLight);
 
-  doc.rect(30, y + 12, w - 60, 46).lineWidth(0.3).stroke(colors.goldLight);
-
-  doc.fontSize(7).fill(colors.grayLight).text(
-    "Este documento fue generado automaticamente por el sistema TerraNova Group.",
-    0, y + 20, { align: "center", width: w }
+  doc.fontSize(6.5).fill(colors.grayLight).text(
+    "Documento generado por TerraNova Group. Para consultas, use el modulo PQRS.",
+    m, y + 10, { width: cw, align: "center" }
   );
-  doc.fontSize(7).fill(colors.grayLight).text(
-    "Para cualquier consulta, comuniquese a traves del modulo PQRS de nuestra plataforma.",
-    0, y + 32, { align: "center", width: w }
-  );
-  doc.fontSize(7).fill(colors.goldLight).text(
+  doc.fontSize(6.5).fill(colors.goldLight).text(
     `(C) ${new Date().getFullYear()} TerraNova Group - Todos los derechos reservados`,
-    0, y + 46, { align: "center", width: w }
+    m, y + 24, { width: cw, align: "center" }
   );
 }
 
 function pdfSectionHeader(doc: PDFKit.PDFDocument, y: number, title: string, accentColor: string, iconChar?: string): number {
   const w = doc.page.width;
-  doc.rect(55, y, w - 110, 22).fill(accentColor);
+  const m = 40;
+  const cw = w - m * 2;
+  doc.rect(m, y, cw, 20).fill(accentColor);
   const label = iconChar ? `${iconChar}  ${title.toUpperCase()}` : title.toUpperCase();
-  doc.fontSize(9).fill(colors.white).text(label, 68, y + 6, { characterSpacing: 1.5 });
-  return y + 30;
+  doc.fontSize(8.5).fill(colors.white).text(label, m + 12, y + 6, { width: cw - 24, characterSpacing: 1.5 });
+  return y + 26;
 }
 
 function pdfMetaLine(doc: PDFKit.PDFDocument, y: number, leftText: string, rightText: string): number {
@@ -134,7 +139,7 @@ function generateReceiptPDF(pago: Pago, venta: Venta, lote: Lote, user: User, to
     doc.on("error", reject);
 
     const w = doc.page.width;
-    const tableW = w - 110;
+    const tableW = w - 80;
 
     pdfLuxuryHeader(doc, colors.green, colors.goldLight, "Comprobante de Pago", "Documento oficial de soporte de transaccion");
 
@@ -167,9 +172,9 @@ function generateReceiptPDF(pago: Pago, venta: Venta, lote: Lote, user: User, to
     y = drawTableRow(doc, y, "No. de venta", String(venta.id).padStart(6, "0"), tableW, true, colors.gold);
 
     const estadoY = y;
-    doc.rect(55, estadoY, tableW, 26).fill(colors.greenPale);
-    doc.rect(55, estadoY, tableW, 26).lineWidth(1).stroke(colors.greenLight);
-    doc.fontSize(10).fill(colors.greenLight).text("ESTADO:  APROBADO", 0, estadoY + 7, { align: "center", width: w, characterSpacing: 2 });
+    doc.rect(40, estadoY, tableW, 26).fill(colors.greenPale);
+    doc.rect(40, estadoY, tableW, 26).lineWidth(1).stroke(colors.greenLight);
+    doc.fontSize(10).fill(colors.greenLight).text("ESTADO:  APROBADO", 40, estadoY + 7, { width: tableW, align: "center", characterSpacing: 2 });
     y = estadoY + 34;
     y += 8;
 
@@ -179,26 +184,27 @@ function generateReceiptPDF(pago: Pago, venta: Venta, lote: Lote, user: User, to
     const progreso = Math.min(100, (totalPagado / parseFloat(venta.valorTotal)) * 100);
 
     const boxH = 80;
-    doc.rect(55, y, tableW, boxH).fill(colors.cream);
-    drawDecorativeBorder(doc, 55, y, tableW, boxH, colors.greenLight);
+    doc.rect(40, y, tableW, boxH).fill(colors.cream);
+    drawDecorativeBorder(doc, 40, y, tableW, boxH, colors.greenLight);
 
-    doc.fontSize(8).fill(colors.grayMed).text("Valor total del lote", 75, y + 10);
-    doc.fontSize(11).fill(colors.dark).text(formatCurrency(venta.valorTotal), 75, y + 22);
+    const colW3 = Math.round(tableW / 3);
+    doc.fontSize(8).fill(colors.grayMed).text("Valor total del lote", 55, y + 10, { width: colW3 - 20 });
+    doc.fontSize(11).fill(colors.dark).text(formatCurrency(venta.valorTotal), 55, y + 22, { width: colW3 - 20 });
 
-    doc.fontSize(8).fill(colors.grayMed).text("Total pagado a la fecha", 250, y + 10);
-    doc.fontSize(11).fill(colors.greenLight).text(formatCurrency(totalPagado), 250, y + 22);
+    doc.fontSize(8).fill(colors.grayMed).text("Total pagado a la fecha", 40 + colW3, y + 10, { width: colW3 - 10 });
+    doc.fontSize(11).fill(colors.greenLight).text(formatCurrency(totalPagado), 40 + colW3, y + 22, { width: colW3 - 10 });
 
-    doc.fontSize(8).fill(colors.grayMed).text("Saldo pendiente", 420, y + 10);
-    doc.fontSize(11).fill(saldo > 0 ? colors.redLight : colors.greenLight).text(formatCurrency(saldo), 420, y + 22);
+    doc.fontSize(8).fill(colors.grayMed).text("Saldo pendiente", 40 + colW3 * 2, y + 10, { width: colW3 - 10 });
+    doc.fontSize(11).fill(saldo > 0 ? colors.redLight : colors.greenLight).text(formatCurrency(saldo), 40 + colW3 * 2, y + 22, { width: colW3 - 10 });
 
-    const barX = 75;
+    const barX = 55;
     const barY = y + 48;
-    const barW = tableW - 100;
+    const barW = tableW - 40;
     doc.rect(barX, barY, barW, 10).fill(colors.border);
     doc.rect(barX, barY, barW * (progreso / 100), 10).fill(colors.greenLight);
     doc.rect(barX, barY, barW, 10).lineWidth(0.3).stroke(colors.grayLight);
     doc.fontSize(8).fill(colors.dark).text(`Progreso: ${progreso.toFixed(1)}% completado`, barX, barY + 14);
-    doc.fontSize(8).fill(colors.grayMed).text(`${numeroCuota}/${venta.cuotas} cuotas`, barX + barW - 80, barY + 14);
+    doc.fontSize(8).fill(colors.grayMed).text(`${numeroCuota}/${venta.cuotas} cuotas`, barX + barW - 100, barY + 14);
 
     pdfLuxuryFooter(doc);
     doc.end();
@@ -214,7 +220,7 @@ function generateRejectionPDF(pago: Pago, venta: Venta, lote: Lote, user: User, 
     doc.on("error", reject);
 
     const w = doc.page.width;
-    const tableW = w - 110;
+    const tableW = w - 80;
 
     pdfLuxuryHeader(doc, colors.red, "#FFB0B0", "Notificacion de Rechazo", "Revision de pago - Accion requerida");
 
@@ -278,7 +284,7 @@ function generateCompletionPDF(venta: Venta, lote: Lote, user: User, totalPagado
     doc.on("error", reject);
 
     const w = doc.page.width;
-    const tableW = w - 110;
+    const tableW = w - 80;
 
     doc.rect(0, 0, w, 170).fill(colors.green);
 
