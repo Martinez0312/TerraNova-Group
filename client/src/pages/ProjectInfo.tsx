@@ -79,7 +79,7 @@ export default function ProjectInfo() {
             <div className="flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="md:w-5/12 md:text-right order-2 md:order-1">
                 <h3 className="text-2xl font-bold text-gray-400">3. Construcción</h3>
-                <p className="text-gray-400 font-medium mb-2">Próximamente (2024)</p>
+                <p className="text-gray-400 font-medium mb-2">Próximamente (2026)</p>
                 <p className="text-muted-foreground">Movimiento de tierras, instalación de redes de servicios públicos (acueducto, energía), pavimentación y adecuación de zonas comunes.</p>
               </div>
               <div className="w-12 h-12 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-xl order-1 md:order-2 shadow-inner z-10">3</div>
@@ -92,7 +92,7 @@ export default function ProjectInfo() {
               <div className="w-12 h-12 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-xl order-1 md:order-2 shadow-inner z-10">4</div>
               <div className="md:w-5/12 md:text-left order-3">
                 <h3 className="text-2xl font-bold text-gray-400">4. Entrega</h3>
-                <p className="text-gray-400 font-medium mb-2">Estimado (Finales 2024)</p>
+                <p className="text-gray-400 font-medium mb-2">Estimado (Finales 2027)</p>
                 <p className="text-muted-foreground">Escrituración individual, entrega física del terreno al propietario y permisos listos para inicio de construcción de viviendas.</p>
               </div>
             </div>
